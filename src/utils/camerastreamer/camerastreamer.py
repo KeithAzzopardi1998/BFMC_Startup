@@ -53,7 +53,7 @@ class CameraStreamer(WorkerProcess):
         """
         super(CameraStreamer,self).__init__( inPs, outPs)
 
-        self.serverIp   =  '192.168.1.102' # PC ip
+        self.serverIp   =  '192.168.43.235' # PC ip
         self.port       =  2244            # com port
         
     # ===================================== RUN ==========================================
@@ -107,15 +107,20 @@ class CameraStreamer(WorkerProcess):
         print('Start streaming')
 
         while True:
+            time.sleep(0.05)
             try:
+                print("LOG: fetching image")
                 stamps, image = inP.recv()
+                print("LOG: preparing image for transmission")
                  
                 result, image = cv2.imencode('.jpg', image, encode_param)
                 data   =  image.tobytes()
                 size   =  len(data)
+                print("LOG: packaged image into packet of size %d ... going to transmit"%size)
 
                 self.connection.write(struct.pack("<L",size))
                 self.connection.write(data)
+                print("LOG: successfully transmitted frame")
 
             except Exception as e:
                 print("CameraStreamer failed to stream images:",e,"\n")
