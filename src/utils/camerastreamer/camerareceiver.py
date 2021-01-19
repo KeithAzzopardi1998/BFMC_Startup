@@ -62,6 +62,12 @@ class CameraReceiver(WorkerProcess):
         self.serverIp   =   '0.0.0.0'
 
         self.imgSize    = (480,640,3)
+
+        #self.frame_counter = 0
+        self.out_video  = cv2.VideoWriter('/home/keith/Desktop/rpi_video.mp4',cv2.VideoWriter_fourcc('a','v','c','1'),10,(self.imgSize[0],self.imgSize[1]))
+        #self.out_video  = cv2.VideoWriter('/home/keith/Desktop/rpi_video.mp4',cv2.VideoWriter_fourcc('H','2','6','4'),10,(self.imgSize[1],self.imgSize[0]))
+        #self.out_video  = cv2.VideoWriter('/home/keith/Desktop/rpi_video.mp4',cv2.VideoWriter_fourcc('M','P','4','V'),10,(self.imgSize[1],self.imgSize[0]))
+        #self.out_video  = cv2.VideoWriter('/home/keith/Desktop/rpi_video.avi',cv2.VideoWriter_fourcc('M','J','P','G'),10,(self.imgSize[1],self.imgSize[0]))
     # ===================================== RUN ==========================================
     def run(self):
         """Apply the initializers and start the threads. 
@@ -108,12 +114,31 @@ class CameraReceiver(WorkerProcess):
                 image = cv2.imdecode(image, cv2.IMREAD_COLOR)
                 image = np.reshape(image, self.imgSize)
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                #self.out_video.write(image)
+                #grey = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+                # Make the grey scale image have three channels
+                #grey_3_channel = cv2.cvtColor(grey, cv2.COLOR_GRAY2BGR)
+
+                #processed=process_image(image)
+
+                hor_concat = np.hstack((image, image))
 
                 # ----------------------- show images -------------------
-                cv2.imshow('Image', image) 
+                #cv2.imshow('Image', hor_concat) 
+
+                #frame_filename="~/Desktop/frame%d.jpg"%self.frame_counter
+                #cv2.imwrite(frame_filename,image)
+                #print(self.frame_counter)
+                #np.save(frame_filename,image)
+                #cv2.imshow('Image',image)
+                #self.frame_counter+=1
+
+                self.out_video.write(image)
                 cv2.waitKey(1)
         except:
             pass
         finally:
             self.connection.close()
             self.server_socket.close()
+            self.out_video.release()
+
