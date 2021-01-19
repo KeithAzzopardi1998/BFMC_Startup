@@ -33,6 +33,7 @@ from multiprocessing import Process
 from threading import Thread
 
 import cv2
+import os
 
 from src.utils.templates.workerprocess import WorkerProcess
 
@@ -53,7 +54,7 @@ class CameraStreamer(WorkerProcess):
         """
         super(CameraStreamer,self).__init__( inPs, outPs)
 
-        self.serverIp   =  '192.168.43.235' # PC ip
+        self.serverIp   =  os.environ['IP_PC'] # PC ip
         self.port       =  2244            # com port
         
     # ===================================== RUN ==========================================

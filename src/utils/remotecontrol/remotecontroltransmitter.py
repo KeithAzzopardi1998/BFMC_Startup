@@ -27,6 +27,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 import json
 import socket
+import os
 
 from threading       import  Thread
 from multiprocessing import  Pipe
@@ -50,7 +51,7 @@ class RemoteControlTransmitter(Thread):
         self.listener  =  KeyboardListener([self.lisBrS])
 
         self.port      =  12244
-        self.serverIp  = '192.168.1.2'
+        self.serverIp  =  os.environ['IP_PI']
 
         self.threads = list()
     # ===================================== RUN ==========================================
